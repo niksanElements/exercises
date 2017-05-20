@@ -33,8 +33,8 @@ class Architect {
 
   // Determines the type of given triangle: "rectangular", "equilateral", "isosceles", "random"
   def triangleType(t: Triangle): String = {
-    if(t.a == t.b == t.c) return "equilateral"
-    if(t.a == t.b) return"isosceles"
+    if(t.a == t.b && t.b == t.c) return "equilateral"
+    if(t.a == t.b) return "isosceles"
     if((t.a*t.a+t.b*t.b) == (t.c*t.c)) return "rectangular"
     return "random"
   }
@@ -50,11 +50,11 @@ class Architect {
    *  Hint: for triangles use the max function
    */
   def area(s: Shape): Double = s match{
-    case x: Trianlge =>{
+    case x: Triangle =>{
       if(triangleType(x) == "rectangular") return x.a* x.b/2.0
       else{
         val largestSide = max(List[Int](x.a,x.b,x.c))
-        return largestSide * x.h/2.0
+        return largestSide.get * (x.h/2.0)
       }
     }
     case x: Rectangle => x.a * x.b
@@ -68,8 +68,14 @@ class Architect {
    *  Hint: use the triangleType function
    */
   def findRectangulars(shapes: List[Shape]): Int = {
-    def iter(shapes: List[Shape], n: Int): Int = ???
-    iter(???, ???)
+    def iter(shapes: List[Shape], n: Int): Int = {
+      if(shapes.isEmpty) n;
+      else iter(shapes.tail,shapes.head match{
+        case t:Triangle => if(triangleType(t).equals("rectangular")) n+1 else n;
+        case s:Shape => n; 
+      });       
+    }
+    iter(shapes, 0);
   }
 }
 
